@@ -1,0 +1,33 @@
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&display=swap');
+* {
+  padding: 0;
+  margin: 0;
+  font-family: "Outfit", sans-serif !important;
+}
+button:hover {
+  cursor: pointer;
+}
+button {
+  border: none;
+}
+.app {
+  min-height: 200px;
+}
+.validateaccount {
+  width: 100%;
+  height: 500px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.validateaccount .validate-content {
+  width: 550px;
+  height: 200px;
+  border-radius: 15px;
+  background-color: rgb(151, 250, 151);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 10px;
+  line-height: 30px;
+}
