@@ -7,23 +7,39 @@ import { faEye, faSave, faDownload } from "@fortawesome/free-solid-svg-icons";
 import { userCurrent } from "../redux/userSlice/userSlice";
 
 // Import Material UI components
-import { 
-  Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper,
-  Button, IconButton, Dialog, DialogTitle, DialogContent, DialogActions,
-  TextField, Typography, Box, Chip, Divider
-} from '@mui/material';
-import CloseIcon from '@mui/icons-material/Close';
-import SaveIcon from '@mui/icons-material/Save';
-import VisibilityIcon from '@mui/icons-material/Visibility';
-import GetAppIcon from '@mui/icons-material/GetApp';
-import CheckCircleIcon from '@mui/icons-material/CheckCircle';
-import CancelIcon from '@mui/icons-material/Cancel';
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Paper,
+  Button,
+  IconButton,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  TextField,
+  Typography,
+  Box,
+  Chip,
+  Divider,
+} from "@mui/material";
+import CloseIcon from "@mui/icons-material/Close";
+import SaveIcon from "@mui/icons-material/Save";
+import VisibilityIcon from "@mui/icons-material/Visibility";
+import GetAppIcon from "@mui/icons-material/GetApp";
+import CheckCircleIcon from "@mui/icons-material/CheckCircle";
+import CancelIcon from "@mui/icons-material/Cancel";
 
 const DataComList = () => {
   const dispatch = useDispatch();
 
   const user = useSelector((state) => state?.user?.user);
   const { allDataComs, status, error } = useSelector((state) => state.dataCom);
+  console.log(allDataComs,"allDataComs");
   const [editingRow, setEditingRow] = useState(null);
   const [files, setFiles] = useState({
     preavisDarriver: null,
@@ -91,11 +107,11 @@ const DataComList = () => {
   // Rendu des boutons de document avec Material UI
   const renderDocumentButtons = (document, name, prefix) => {
     if (!document) return "-";
-    
+
     return (
-      <Box sx={{ display: 'flex', justifyContent: 'center', gap: 1 }}>
-        <IconButton 
-          size="small" 
+      <Box sx={{ display: "flex", justifyContent: "center", gap: 1 }}>
+        <IconButton
+          size="small"
           color="primary"
           href={`http://localhost:5000${document}`}
           target="_blank"
@@ -103,10 +119,15 @@ const DataComList = () => {
         >
           <VisibilityIcon fontSize="small" />
         </IconButton>
-        <IconButton 
-          size="small" 
+        <IconButton
+          size="small"
           color="success"
-          onClick={() => handleDownload(`http://localhost:5000${document}`, `${prefix}_${name}.pdf`)}
+          onClick={() =>
+            handleDownload(
+              `http://localhost:5000${document}`,
+              `${prefix}_${name}.pdf`
+            )
+          }
         >
           <GetAppIcon fontSize="small" />
         </IconButton>
@@ -115,75 +136,116 @@ const DataComList = () => {
   };
 
   if (status === "loading") return <Typography>Chargement...</Typography>;
-  if (status === "failed") return <Typography color="error">Erreur: {error}</Typography>;
+  if (status === "failed")
+    return <Typography color="error">Erreur: {error}</Typography>;
 
   return (
     <div className="p-4">
       <Typography variant="h5" fontWeight="bold" sx={{ mb: 3 }}>
         Liste des DataComs
       </Typography>
-      
+
       {allDataComs.length === 0 ? (
         <Typography variant="body1">Aucun DataCom trouvé.</Typography>
       ) : (
-        <TableContainer component={Paper} elevation={3} sx={{ mb: 4, overflow: 'auto' }}>
+        <TableContainer
+          component={Paper}
+          elevation={3}
+          sx={{ mb: 4, overflow: "auto" }}
+        >
           <Table sx={{ minWidth: 650 }} size="small">
             <TableHead>
-              <TableRow sx={{ backgroundColor: '#f5f5f5' }}>
-                <TableCell sx={{ fontWeight: 'bold' }}>Nom</TableCell>
-                <TableCell sx={{ fontWeight: 'bold' }}>Poids</TableCell>
-                <TableCell sx={{ fontWeight: 'bold' }}>Volume</TableCell>
-                <TableCell sx={{ fontWeight: 'bold' }}>Provenance</TableCell>
-                <TableCell sx={{ fontWeight: 'bold' }}>Date Estimée</TableCell>
-                <TableCell sx={{ fontWeight: 'bold' }}>Date Arrivée</TableCell>
-                <TableCell sx={{ fontWeight: 'bold' }}>Bielle</TableCell>
-                <TableCell sx={{ fontWeight: 'bold' }}>Facture</TableCell>
-                <TableCell sx={{ fontWeight: 'bold' }}>Packing Liste</TableCell>
-                <TableCell sx={{ fontWeight: 'bold' }}>Préavis</TableCell>
-                <TableCell sx={{ fontWeight: 'bold' }}>Avis</TableCell>
-                {user?.role === "comercial" && (
-                  <TableCell sx={{ fontWeight: 'bold' }}>Statut</TableCell>
+              <TableRow sx={{ backgroundColor: "#f5f5f5" }}>
+                <TableCell sx={{ fontWeight: "bold" }}>Nom</TableCell>
+                <TableCell sx={{ fontWeight: "bold" }}>Poids</TableCell>
+                <TableCell sx={{ fontWeight: "bold" }}>Volume</TableCell>
+                <TableCell sx={{ fontWeight: "bold" }}>Provenance</TableCell>
+                <TableCell sx={{ fontWeight: "bold" }}>Date Estimée</TableCell>
+                <TableCell sx={{ fontWeight: "bold" }}>Date Arrivée</TableCell>
+                <TableCell sx={{ fontWeight: "bold" }}>Bielle</TableCell>
+                <TableCell sx={{ fontWeight: "bold" }}>Facture</TableCell>
+                <TableCell sx={{ fontWeight: "bold" }}>Packing Liste</TableCell>
+                <TableCell sx={{ fontWeight: "bold" }}>Préavis</TableCell>
+                <TableCell sx={{ fontWeight: "bold" }}>Avis</TableCell>
+                {user?.role === "commercial" && (
+                  <TableCell sx={{ fontWeight: "bold" }}>Statut</TableCell>
                 )}
                 {user?.role === "magasin" && (
-                  <TableCell sx={{ fontWeight: 'bold' }}>Actions</TableCell>
+                  <TableCell sx={{ fontWeight: "bold" }}>Actions</TableCell>
                 )}
               </TableRow>
             </TableHead>
-            
+
             <TableBody>
               {allDataComs.map((item) => (
                 <>
-                  {user?.role === "comercial" && (
-                    <TableRow 
-                      key={item._id} 
-                      sx={{ 
-                        '&:nth-of-type(odd)': { backgroundColor: '#fafafa' },
-                        '&:hover': { backgroundColor: '#f0f7ff' }
+                  {user?.role === "commercial" && (
+                    <TableRow
+                      key={item._id}
+                      sx={{
+                        "&:nth-of-type(odd)": { backgroundColor: "#fafafa" },
+                        "&:hover": { backgroundColor: "#f0f7ff" },
                       }}
                     >
                       <TableCell>{item.nom}</TableCell>
                       <TableCell>{item.poid}</TableCell>
                       <TableCell>{item.volume}</TableCell>
                       <TableCell>{item.provenence}</TableCell>
-                      <TableCell>{new Date(item.estimateTime).toLocaleDateString()}</TableCell>
-                      <TableCell>{new Date(item.arrivedTime).toLocaleDateString()}</TableCell>
-                      <TableCell>{renderDocumentButtons(item.bielle, item.nom, 'bielle')}</TableCell>
-                      <TableCell>{renderDocumentButtons(item.facture, item.nom, 'facture')}</TableCell>
-                      <TableCell>{renderDocumentButtons(item.packingListe, item.nom, 'packing-list')}</TableCell>
-                      <TableCell>{renderDocumentButtons(item.preavisDarriver, item.nom, 'preavisDarriver')}</TableCell>
-                      <TableCell>{renderDocumentButtons(item.avisDarriver, item.nom, 'avisDarriver')}</TableCell>
-                      
-                      {user?.role === "comercial" && (
+                      <TableCell>
+                        {new Date(item.estimateTime).toLocaleDateString()}
+                      </TableCell>
+                      <TableCell>
+                        {new Date(item.arrivedTime).toLocaleDateString()}
+                      </TableCell>
+                      <TableCell>
+                        {renderDocumentButtons(item.bielle, item.nom, "bielle")}
+                      </TableCell>
+                      <TableCell>
+                        {renderDocumentButtons(
+                          item.facture,
+                          item.nom,
+                          "facture"
+                        )}
+                      </TableCell>
+                      <TableCell>
+                        {renderDocumentButtons(
+                          item.packingListe,
+                          item.nom,
+                          "packing-list"
+                        )}
+                      </TableCell>
+                      <TableCell>
+                        {renderDocumentButtons(
+                          item.preavisDarriver,
+                          item.nom,
+                          "preavisDarriver"
+                        )}
+                      </TableCell>
+                      <TableCell>
+                        {renderDocumentButtons(
+                          item.avisDarriver,
+                          item.nom,
+                          "avisDarriver"
+                        )}
+                      </TableCell>
+
+                      {user?.role === "commercial" && (
                         <TableCell>
                           {item?.statut === "" || item?.statut === "reject" ? (
-                            <Box sx={{ display: 'flex', justifyContent: 'center', gap: 1 }}>
+                            <Box
+                              sx={{
+                                display: "flex",
+                                justifyContent: "center",
+                                gap: 1,
+                              }}
+                            >
                               <IconButton color="success" size="small">
                                 <CheckCircleIcon fontSize="small" />
                               </IconButton>
                               {item?.statut === "" && (
-                                <IconButton 
-                                  color="error" 
-                                  size="small" 
+                                <IconButton
+                                  color="error"
+                                  size="small"
                                   onClick={() => setIsRejectModalOpen(true)}
                                 >
                                   <CancelIcon fontSize="small" />
@@ -191,16 +253,16 @@ const DataComList = () => {
                               )}
                             </Box>
                           ) : item?.statut === "accept" ? (
-                            <Chip 
-                              label={item?.coments || "Validé"} 
-                              color="success" 
-                              size="small" 
-                              sx={{ fontSize: '0.75rem' }}
+                            <Chip
+                              label={item?.coments || "Validé"}
+                              color="success"
+                              size="small"
+                              sx={{ fontSize: "0.75rem" }}
                             />
                           ) : null}
                         </TableCell>
                       )}
-                      
+
                       {user?.role === "magasin" && (
                         <TableCell>
                           <Button
@@ -208,7 +270,7 @@ const DataComList = () => {
                             size="small"
                             color="primary"
                             onClick={() => handleEdit(item._id)}
-                            sx={{ textTransform: 'none', py: 0.5 }}
+                            sx={{ textTransform: "none", py: 0.5 }}
                           >
                             Update
                           </Button>
@@ -218,40 +280,76 @@ const DataComList = () => {
                   )}
                 </>
               ))}
-              
+
               {allDataComs.map((item) => (
                 <>
                   {user?.role === "magasin" && item?.statut === "accept" && (
-                    <TableRow 
-                      key={item._id} 
-                      sx={{ 
-                        '&:nth-of-type(odd)': { backgroundColor: '#fafafa' },
-                        '&:hover': { backgroundColor: '#f0f7ff' }
+                    <TableRow
+                      key={item._id}
+                      sx={{
+                        "&:nth-of-type(odd)": { backgroundColor: "#fafafa" },
+                        "&:hover": { backgroundColor: "#f0f7ff" },
                       }}
                     >
                       <TableCell>{item.nom}</TableCell>
                       <TableCell>{item.poid}</TableCell>
                       <TableCell>{item.volume}</TableCell>
                       <TableCell>{item.provenence}</TableCell>
-                      <TableCell>{new Date(item.estimateTime).toLocaleDateString()}</TableCell>
-                      <TableCell>{new Date(item.arrivedTime).toLocaleDateString()}</TableCell>
-                      <TableCell>{renderDocumentButtons(item.bielle, item.nom, 'bielle')}</TableCell>
-                      <TableCell>{renderDocumentButtons(item.facture, item.nom, 'facture')}</TableCell>
-                      <TableCell>{renderDocumentButtons(item.packingListe, item.nom, 'packing-list')}</TableCell>
-                      <TableCell>{renderDocumentButtons(item.preavisDarriver, item.nom, 'preavisDarriver')}</TableCell>
-                      <TableCell>{renderDocumentButtons(item.avisDarriver, item.nom, 'avisDarriver')}</TableCell>
-                      
-                      {user?.role === "comercial" && (
+                      <TableCell>
+                        {new Date(item.estimateTime).toLocaleDateString()}
+                      </TableCell>
+                      <TableCell>
+                        {new Date(item.arrivedTime).toLocaleDateString()}
+                      </TableCell>
+                      <TableCell>
+                        {renderDocumentButtons(item.bielle, item.nom, "bielle")}
+                      </TableCell>
+                      <TableCell>
+                        {renderDocumentButtons(
+                          item.facture,
+                          item.nom,
+                          "facture"
+                        )}
+                      </TableCell>
+                      <TableCell>
+                        {renderDocumentButtons(
+                          item.packingListe,
+                          item.nom,
+                          "packing-list"
+                        )}
+                      </TableCell>
+                      <TableCell>
+                        {renderDocumentButtons(
+                          item.preavisDarriver,
+                          item.nom,
+                          "preavisDarriver"
+                        )}
+                      </TableCell>
+                      <TableCell>
+                        {renderDocumentButtons(
+                          item.avisDarriver,
+                          item.nom,
+                          "avisDarriver"
+                        )}
+                      </TableCell>
+
+                      {user?.role === "commercial" && (
                         <TableCell>
                           {item?.statut === "" || item?.statut === "reject" ? (
-                            <Box sx={{ display: 'flex', justifyContent: 'center', gap: 1 }}>
+                            <Box
+                              sx={{
+                                display: "flex",
+                                justifyContent: "center",
+                                gap: 1,
+                              }}
+                            >
                               <IconButton color="success" size="small">
                                 <CheckCircleIcon fontSize="small" />
                               </IconButton>
                               {item?.statut === "" && (
-                                <IconButton 
-                                  color="error" 
-                                  size="small" 
+                                <IconButton
+                                  color="error"
+                                  size="small"
                                   onClick={() => setIsRejectModalOpen(true)}
                                 >
                                   <CancelIcon fontSize="small" />
@@ -259,16 +357,16 @@ const DataComList = () => {
                               )}
                             </Box>
                           ) : item?.statut === "accept" ? (
-                            <Chip 
-                              label={item?.coments || "Validé"} 
-                              color="success" 
+                            <Chip
+                              label={item?.coments || "Validé"}
+                              color="success"
                               size="small"
-                              sx={{ fontSize: '0.75rem' }}
+                              sx={{ fontSize: "0.75rem" }}
                             />
                           ) : null}
                         </TableCell>
                       )}
-                      
+
                       {user?.role === "magasin" && (
                         <TableCell>
                           <Button
@@ -276,7 +374,7 @@ const DataComList = () => {
                             size="small"
                             color="primary"
                             onClick={() => handleEdit(item._id)}
-                            sx={{ textTransform: 'none', py: 0.5 }}
+                            sx={{ textTransform: "none", py: 0.5 }}
                           >
                             Update
                           </Button>
@@ -292,18 +390,21 @@ const DataComList = () => {
       )}
 
       {/* Modal for file update - using Material UI Dialog */}
-      <Dialog 
-        open={isModalOpen} 
-        onClose={handleCancel}
-        maxWidth="sm"
-        fullWidth
-      >
-        <DialogTitle sx={{ m: 0, p: 2, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+      <Dialog open={isModalOpen} onClose={handleCancel} maxWidth="sm" fullWidth>
+        <DialogTitle
+          sx={{
+            m: 0,
+            p: 2,
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+          }}
+        >
           <Typography variant="h6">Modifier les fichiers</Typography>
           <IconButton
             aria-label="close"
             onClick={handleCancel}
-            sx={{ color: 'gray' }}
+            sx={{ color: "gray" }}
           >
             <CloseIcon />
           </IconButton>
@@ -311,7 +412,9 @@ const DataComList = () => {
         <Divider />
         <DialogContent>
           <Box sx={{ my: 2 }}>
-            <Typography variant="subtitle2" gutterBottom>Préavis:</Typography>
+            <Typography variant="subtitle2" gutterBottom>
+              Préavis:
+            </Typography>
             <TextField
               type="file"
               id="preavisDarriver"
@@ -324,7 +427,9 @@ const DataComList = () => {
             />
           </Box>
           <Box sx={{ my: 2 }}>
-            <Typography variant="subtitle2" gutterBottom>Avis:</Typography>
+            <Typography variant="subtitle2" gutterBottom>
+              Avis:
+            </Typography>
             <TextField
               type="file"
               id="avisDarriver"
@@ -338,15 +443,11 @@ const DataComList = () => {
           </Box>
         </DialogContent>
         <DialogActions sx={{ p: 2 }}>
-          <Button 
-            onClick={handleCancel} 
-            color="inherit"
-            variant="outlined"
-          >
+          <Button onClick={handleCancel} color="inherit" variant="outlined">
             Annuler
           </Button>
-          <Button 
-            onClick={() => handleSave(editingRow)} 
+          <Button
+            onClick={() => handleSave(editingRow)}
             color="primary"
             variant="contained"
             startIcon={<SaveIcon />}
@@ -363,12 +464,20 @@ const DataComList = () => {
         maxWidth="sm"
         fullWidth
       >
-        <DialogTitle sx={{ m: 0, p: 2, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+        <DialogTitle
+          sx={{
+            m: 0,
+            p: 2,
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+          }}
+        >
           <Typography variant="h6">Rejeter avec commentaire</Typography>
           <IconButton
             aria-label="close"
             onClick={() => setIsRejectModalOpen(false)}
-            sx={{ color: 'gray' }}
+            sx={{ color: "gray" }}
           >
             <CloseIcon />
           </IconButton>
@@ -387,17 +496,14 @@ const DataComList = () => {
           />
         </DialogContent>
         <DialogActions sx={{ p: 2 }}>
-          <Button 
-            onClick={() => setIsRejectModalOpen(false)} 
+          <Button
+            onClick={() => setIsRejectModalOpen(false)}
             color="inherit"
             variant="outlined"
           >
             Annuler
           </Button>
-          <Button 
-            color="primary"
-            variant="contained"
-          >
+          <Button color="primary" variant="contained">
             Mettre à jour
           </Button>
         </DialogActions>
