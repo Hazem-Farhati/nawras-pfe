@@ -31,6 +31,8 @@ function App() {
     dispatch(getusers());
   }, [dispatch]);
   const users = useSelector((state) => state.user?.users);
+  const user = useSelector((state) => state.user?.user);
+
   console.log(users, "hhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh");
   return (
     <div>
@@ -41,7 +43,7 @@ function App() {
           </Route>
           <Route element={<PrivateRoute />}>
             <Route path="/dashboard" element={<Dashboard />} />{" "}
-            <Route path="/dataComList" element={<DataComList />} />{" "}
+            <Route path="/dataComList" element={<DataComList user={user} />} />{" "}
             <Route path="/verify-account/:token" element={<Verifyaccount />} />
             <Route path="/forgotpassword" element={<Forgotpassword />} />
             <Route path="/reset-password/:token" element={<Reset_password />} />

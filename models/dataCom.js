@@ -14,6 +14,8 @@ const dataComSchema = new schema({
 
   preavisDarriver: { type: String, default: "" },
   avisDarriver: { type: String, default: "" },
+  coments: { type: String, default: "" },
+  statut: { type: String, default: "" },
 });
 
 const DataCom = mongoose.model("DataCom", dataComSchema);

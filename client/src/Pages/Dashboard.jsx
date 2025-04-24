@@ -2,7 +2,8 @@ import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
-import "../styles/Profile.css";
+import "../styles/dashcss.css";
+
 import { logout } from "../redux/userSlice/userSlice";
 import { addDataCom } from "../redux/dataCom/dataCom";
 
@@ -52,65 +53,84 @@ const Dashboard = () => {
     // Dispatch Redux action
     dispatch(addDataCom(formData));
   };
+
   return (
     <div className="dashboard">
-      <h2>Welcome, {user?.name}</h2>
+      {/* Header مع Logout في الزاوية العلوية اليمنى */}
+      <div className="header">
+        <h2>Welcome, {user?.name}</h2>
+        <h4
+          className="logout"
+          onClick={() => {
+            dispatch(logout());
+            navigate("/");
+          }}
+        >
+          Logout
+        </h4>
+      </div>
 
-      {user?.role === "commercial" ? (
-        <div>Commercial Dashboard</div>
-      ) : user?.role === "magasin" ? (
-        <div>Magasin Dashboard</div>
-      ) : (
-        <div>Admin Dashboard</div>
-      )}
-      {/* 
-      {status && <div className="status-message">{status}</div>}
-      {errorMessage && <div className="error-message">{errorMessage}</div>}
+  
 
-      
-      {valideMessage && <div className="success-message">{valideMessage}</div>} */}
       <form onSubmit={handleSubmit}>
-        <input name="nom" placeholder="Nom" onChange={handleInputChange} />
-        <input name="poid" placeholder="Poids" onChange={handleInputChange} />
         <input
+          className="input"
+          name="nom"
+          placeholder="Nom"
+          onChange={handleInputChange}
+        />
+        <input
+          className="input"
+          name="poid"
+          placeholder="Poids"
+          onChange={handleInputChange}
+        />
+        <input
+          className="input"
           name="volume"
           placeholder="Volume"
           onChange={handleInputChange}
         />
         <input
+          className="input"
           name="provenence"
           placeholder="Provenance"
           onChange={handleInputChange}
         />
         <input
+          className="input"
           name="estimateTime"
           type="datetime-local"
           onChange={handleInputChange}
         />
         <input
+          className="input"
           name="arrivedTime"
           type="datetime-local"
           onChange={handleInputChange}
         />
 
-        <label>Bielle (PDF):</label>
+        <label className="label">Bielle (PDF):</label>
         <input
+          className="file-input"
           type="file"
           name="bielle"
           accept="application/pdf"
           onChange={handleFileChange}
         />
 
-        <label>Facture (PDF):</label>
+        <label className="label">Facture (PDF):</label>
         <input
+          className="file-input"
           type="file"
           name="facture"
           accept="application/pdf"
           onChange={handleFileChange}
         />
 
-        <label>Packing Liste (PDF):</label>
+        <label className="label">Packing Liste (PDF):</label>
         <input
+          className="file-input"
           type="file"
           name="packingListe"
           accept="application/pdf"
@@ -119,14 +139,6 @@ const Dashboard = () => {
 
         <button type="submit">Ajouter</button>
       </form>
-      <h4
-        onClick={() => {
-          dispatch(logout());
-          navigate("/");
-        }}
-      >
-        Logout
-      </h4>
     </div>
   );
 };

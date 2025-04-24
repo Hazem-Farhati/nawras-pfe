@@ -56,13 +56,24 @@ dataComRouter.get("/getbyid/:id", async (req, res) => {
 });
 
 //update dataCom by id
-
+dataComRouter.put("/update/:id", async (req, res) => {
+  try {
+    const result = await DataCom.findByIdAndUpdate(
+      { _id: req.params.id },
+      { $set: { ...req.body } },
+      { new: true }
+    );
+    res.send({ newDataCom: result, msg: "Cours updated" });
+  } catch (error) {
+    console.log(error);
+  }
+});
 // dataCom.routes.js
 dataComRouter.put(
   "/update-files/:id",
   upload.fields([
     { name: "preavisDarriver", maxCount: 1 },
-    { name: "avisDarriver", maxCount: 1 }
+    { name: "avisDarriver", maxCount: 1 },
   ]),
   async (req, res) => {
     try {
@@ -76,16 +87,18 @@ dataComRouter.put(
         updateData.avisDarriver = `/uploads/${req.files.avisDarriver[0].filename}`;
       }
 
-      const updatedDataCom = await DataCom.findByIdAndUpdate(id, updateData, { new: true });
-      
+      const updatedDataCom = await DataCom.findByIdAndUpdate(id, updateData, {
+        new: true,
+      });
+
       res.status(200).json({
         success: true,
-        dataCom: updatedDataCom
+        dataCom: updatedDataCom,
       });
     } catch (error) {
       res.status(500).json({
         success: false,
-        message: "Erreur serveur"
+        message: "Erreur serveur",
       });
     }
   }

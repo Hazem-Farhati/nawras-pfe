@@ -106,6 +106,7 @@ export const userSlice = createSlice({
       state.user = null;
       localStorage.removeItem("token");
     },
+   
   },
   extraReducers: (builder) => {
     // register extra reducers
