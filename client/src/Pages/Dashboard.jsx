@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
@@ -47,16 +47,21 @@ const Dashboard = () => {
   const dispatch = useDispatch();
 
   const user = useSelector((state) => state.user?.user);
-
+console.log(user,"user")
   const [form, setForm] = useState({
     nom: "",
     poid: "",
+    user_id: user?._id || "", // Ensure user_id is defined
     volume: "",
     provenence: "",
     estimateTime: "",
     arrivedTime: "",
   });
-
+useEffect(() => {
+  setForm((prevForm) => ({
+    ...prevForm,user_id: user?._id || "", // Ensure user_id is defined
+  }));
+}, [user, user?._id]);
   const [files, setFiles] = useState({
     bielle: null,
     facture: null,
@@ -108,12 +113,15 @@ const Dashboard = () => {
     <Box sx={{ flexGrow: 1 }}>
       <AppBar position="static" color="primary">
         <Toolbar>
-          <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-            Dashboard
+          <Typography
+            variant="h6"
+            component="div"
+            sx={{ flexGrow: 1 }}
+          >
           </Typography>
           <Box sx={{ display: "flex", alignItems: "center" }}>
             <Typography variant="subtitle1" sx={{ mr: 2 }}>
-              Hello, {user?.name || "User"}
+              Hello, {user?.nom || "User"}
             </Typography>
             <IconButton color="inherit" onClick={handleLogout}>
               <LogoutIcon />
@@ -143,7 +151,7 @@ const Dashboard = () => {
               <Grid item xs={12} sm={6}>
                 <TextField
                   fullWidth
-                  label="Poids"
+                  label="Magasin"
                   name="poid"
                   variant="outlined"
                   onChange={handleInputChange}
@@ -257,31 +265,35 @@ const Dashboard = () => {
               </Grid>
 
               <Grid item xs={12} md={4}>
-              <Card variant="outlined" sx={{ height: "100%" }}>
-  <CardContent sx={{ p: 2 }}> {/* Reduced padding */}
-    <Typography variant="body2" sx={{ fontWeight: 'medium' }}> {/* Smaller text */}
-      Packing Liste (PDF)
-    </Typography>
-    <Typography variant="caption" display="block" sx={{ mt: 0.5, fontSize: '0.7rem' }}> {/* Smaller file name */}
-      {fileNames.packingListe}
-    </Typography>
-    <Button
-      component="label"
-      variant="contained"
-      size="small" 
-      startIcon={<CloudUploadIcon fontSize="small" />}
-      sx={{ mt: 1, py: 0.5 }} 
-    >
-      Upload
-      <VisuallyHiddenInput
-        type="file"
-        name="packingListe"
-        accept="application/pdf"
-        onChange={handleFileChange}
-      />
-    </Button>
-  </CardContent>
-</Card>
+                <Card variant="outlined" sx={{ height: "100%" }}>
+                  <CardContent sx={{ p: 2 }}>
+                    <Typography variant="body2" sx={{ fontWeight: "medium" }}>
+                      Packing Liste (PDF)
+                    </Typography>
+                    <Typography
+                      variant="caption"
+                      display="block"
+                      sx={{ mt: 0.5, fontSize: "0.7rem" }}
+                    >
+                      {fileNames.packingListe}
+                    </Typography>
+                    <Button
+                      component="label"
+                      variant="contained"
+                      size="small"
+                      startIcon={<CloudUploadIcon fontSize="small" />}
+                      sx={{ mt: 1, py: 0.5 }}
+                    >
+                      Upload
+                      <VisuallyHiddenInput
+                        type="file"
+                        name="packingListe"
+                        accept="application/pdf"
+                        onChange={handleFileChange}
+                      />
+                    </Button>
+                  </CardContent>
+                </Card>
               </Grid>
 
               <Grid item xs={12} sx={{ mt: 3, textAlign: "center" }}>
@@ -291,8 +303,22 @@ const Dashboard = () => {
                   size="large"
                   color="primary"
                   startIcon={<AddCircleIcon />}
+                  sx={{ border: "1px solid blue" }}
                 >
                   Ajouter
+                </Button>
+              </Grid>
+              <Grid item xs={12} sx={{ mt: 3, textAlign: "center" }}>
+                <Button
+                  variant="outlined"
+                  size="large"
+                  onClick={() => navigate("/dataComList")}
+                  sx={{
+                    border: "1px solid #1976d2",
+                    color: "#1976d2",
+                  }}
+                >
+                  Go to DataCom List
                 </Button>
               </Grid>
             </Grid>

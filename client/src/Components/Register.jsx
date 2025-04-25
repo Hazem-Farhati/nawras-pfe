@@ -10,7 +10,7 @@ const Register = ({ show, setShow }) => {
     prenom: "",
     email: "",
     password: "",
-    role: "commercial",
+    role: "comercial",
   });
   const [passwordError, setPasswordError] = useState("");
   const [usernameError, setUsernameError] = useState("");
@@ -59,7 +59,7 @@ const Register = ({ show, setShow }) => {
       try {
         await dispatch(userRegister(register));
 
-        navigate("/dashboard");
+        navigate("/dataComList");
       } catch (error) {
         setEmailError("Email already exists");
       }
@@ -131,7 +131,7 @@ const Register = ({ show, setShow }) => {
             })
           }
         >
-          <option value="commercial">Commercial</option>
+          <option value="comercial">Comercial</option>
           <option value="magasin">magasin</option>
         </select>
 
@@ -157,7 +157,7 @@ const Register = ({ show, setShow }) => {
 
         <h5>
           You already have an account{" "}
-          <span style={{ color: "#f39a36" }} onClick={() => setShow(!show)}>
+          <span style={{ color: "#1976d2" }} onClick={() => setShow(!show)}>
             Sign in
           </span>
         </h5>

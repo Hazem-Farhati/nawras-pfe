@@ -51,16 +51,18 @@ export const updateDataComFiles = createAsyncThunk(
 );
 
 // 🔄 Thunk لتحديث الحقول العادية (statut، coments، وغيرها)
-export const updateDataComFields = createAsyncThunk(
-  "dataCom/updateFields",
-  async ({ id, fields }, thunkAPI) => {
+export const update = createAsyncThunk(
+  "cours/update",
+  async ({ id, fields }) => {
     try {
-      const response = await axios.put(`${API_BASE}/update-fields/${id}`, fields);
-      return response.data;
-    } catch (error) {
-      return thunkAPI.rejectWithValue(
-        error.response?.data?.msg || "Erreur lors de la mise à jour"
+   ;
+      let result = axios.put(
+        `http://localhost:5000/dataCom/update/${id}`,
+        fields
       );
+      return result.data;
+    } catch (error) {
+      console.log(error);
     }
   }
 );
@@ -123,10 +125,10 @@ const dataComSlice = createSlice({
       })
 
       // updateDataComFields
-      .addCase(updateDataComFields.pending, (state) => {
+      .addCase(update.pending, (state) => {
         state.status = "loading";
       })
-      .addCase(updateDataComFields.fulfilled, (state, action) => {
+      .addCase(update.fulfilled, (state, action) => {
         state.status = "succeeded";
         const index = state.allDataComs.findIndex(
           (item) => item._id === action.payload.dataCom._id
@@ -135,7 +137,7 @@ const dataComSlice = createSlice({
           state.allDataComs[index] = action.payload.dataCom;
         }
       })
-      .addCase(updateDataComFields.rejected, (state, action) => {
+      .addCase(update.rejected, (state, action) => {
         state.status = "failed";
         state.error = action.payload;
       });

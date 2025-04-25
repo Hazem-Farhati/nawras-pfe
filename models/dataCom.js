@@ -4,6 +4,7 @@ const schema = mongoose.Schema;
 const dataComSchema = new schema({
   nom: { type: String },
   poid: { type: String },
+  user_id: { type: String },
   volume: { type: String },
   provenence: { type: String },
   bielle: { type: String },

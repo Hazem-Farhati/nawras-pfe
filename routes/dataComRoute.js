@@ -127,12 +127,20 @@ dataComRouter.post(
   ]),
   async (req, res) => {
     try {
-      const { nom, poid, volume, provenence, estimateTime, arrivedTime } =
-        req.body;
+      const {
+        nom,
+        poid,
+        user_id,
+        volume,
+        provenence,
+        estimateTime,
+        arrivedTime,
+      } = req.body;
 
       const newDataCom = new DataCom({
         nom,
         poid,
+        user_id,
         volume,
         provenence,
         estimateTime,

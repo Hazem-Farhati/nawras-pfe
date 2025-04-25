@@ -20,7 +20,7 @@ const Login = ({ show, setShow }) => {
       const response = await dispatch(userLogin(login));
 
       if (response.payload.token) {
-        navigate("/dashboard");
+        navigate("/dataComList");
       }
     } catch (error) {
       setError("Email or password incorrect.");
@@ -61,7 +61,7 @@ const Login = ({ show, setShow }) => {
         </button>
         <h5>
           You don't have an account?{" "}
-          <span style={{ color: "#f39a36" }} onClick={() => setShow(!show)}>
+          <span style={{ color: "#1976d2" }} onClick={() => setShow(!show)}>
             Sign up
           </span>
         </h5>
@@ -69,7 +69,7 @@ const Login = ({ show, setShow }) => {
           Forgot your password?{" "}
           <Link
             to="/forgotpassword"
-            style={{ color: "#f39a36", textDecoration: "none" }}
+            style={{ color: "#1976d2", textDecoration: "none" }}
           >
             Reset password
           </Link>
