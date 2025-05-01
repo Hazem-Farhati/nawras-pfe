@@ -186,6 +186,19 @@ const DataComList = ({ refresh, setRefresh }) => {
 
   return (
     <div className="p-4">
+      <div style={{ display: "flex" }}>
+        <img
+          src="https://cdn-icons-png.flaticon.com/512/4383/4383773.png"
+          alt=""
+          style={{ width: "150px", margin: "20px" }}
+        />
+        <div style={{ margin: "20px" }}>
+          <h2>
+            Nom et prenom : {user?.nom} {user?.prenom}
+          </h2>
+          <h2>Role : {user?.role}</h2>
+        </div>
+      </div>
       <Box
         sx={{
           display: "flex",
@@ -203,16 +216,18 @@ const DataComList = ({ refresh, setRefresh }) => {
             marginRight: "20px",
           }}
         >
-          {"   "}Liste des DataComs
+          {"   "}Liste
         </Typography>
-        <Button
-          variant="contained"
-          color="primary"
-          onClick={navigateToDashboard}
-          startIcon={<AddIcon />}
-        >
-          Ajouter
-        </Button>
+        {user?.role === "comercial" && (
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={navigateToDashboard}
+            startIcon={<AddIcon />}
+          >
+            Ajouter
+          </Button>
+        )}
       </Box>
 
       {allDataComs.length === 0 ? (
@@ -223,19 +238,21 @@ const DataComList = ({ refresh, setRefresh }) => {
             <TableHead>
               <TableRow sx={{ backgroundColor: "#f5f5f5" }}>
                 <TableCell sx={{ fontWeight: "bold" }}>Client</TableCell>
-                <TableCell sx={{ fontWeight: "bold" }}>Magasin</TableCell>
                 <TableCell sx={{ fontWeight: "bold" }}>Volume</TableCell>
                 <TableCell sx={{ fontWeight: "bold" }}>Provenance</TableCell>
-                <TableCell sx={{ fontWeight: "bold" }}>ETD</TableCell>
-                <TableCell sx={{ fontWeight: "bold" }}>ETA</TableCell>
-                <TableCell sx={{ fontWeight: "bold" }}>Bielle</TableCell>
-
+                <TableCell sx={{ fontWeight: "bold" }}>Magasin</TableCell>
+                <TableCell sx={{ fontWeight: "bold" }}>BL</TableCell>
                 <TableCell sx={{ fontWeight: "bold" }}>Statut</TableCell>
-
                 <TableCell sx={{ fontWeight: "bold" }}>Facture</TableCell>
                 <TableCell sx={{ fontWeight: "bold" }}>Packing Liste</TableCell>
-                <TableCell sx={{ fontWeight: "bold" }}>Préavis</TableCell>
-                <TableCell sx={{ fontWeight: "bold" }}>Avis</TableCell>
+                <TableCell sx={{ fontWeight: "bold" }}>ETD</TableCell>
+                <TableCell sx={{ fontWeight: "bold" }}>ETA</TableCell>
+                <TableCell sx={{ fontWeight: "bold" }}>
+                  Préavis d'arriver
+                </TableCell>
+                <TableCell sx={{ fontWeight: "bold" }}>
+                  Avis d'arriver
+                </TableCell>
                 {user?.role === "magasin" && (
                   <TableCell sx={{ fontWeight: "bold" }}>Actions</TableCell>
                 )}
@@ -243,179 +260,195 @@ const DataComList = ({ refresh, setRefresh }) => {
             </TableHead>
 
             <TableBody>
-              {allDataComs.map((item) => {
-                const timeRemaining = calculateTimeRemaining(item.arrivedTime);
-                return (
-                  <TableRow
-                  key={item._id}
-                  sx={{
-                    "&:nth-of-type(odd)": { backgroundColor: "#fafafa" },
-                    "&:hover": { backgroundColor: "#f0f7ff" },
-                  }}
-                  >
-                  <TableCell>{item.nom}</TableCell>
-                  <TableCell>{item.poid}</TableCell>
-                  <TableCell>{item.volume}</TableCell>
-                  <TableCell>{item.provenence}</TableCell>
-                  <TableCell>
-                    {new Date(item.estimateTime).toLocaleDateString()}
-                  </TableCell>
-                  <TableCell>
-                    <Box>
-                    {new Date(item.arrivedTime).toLocaleDateString()}
-                    {timeRemaining.message && (
-                      <Typography
-                      variant="caption"
-                      display="block"
-                      color={timeRemaining.color}
-                      sx={{ mt: 0.5, fontWeight: "bold" }}
-                      >
-                      {timeRemaining.message}
-                      </Typography>
-                    )}
-                    </Box>
-                  </TableCell>
-                  <TableCell>
-                    {(item?.statut === "accept" &&
-                    user?.role === "magasin") ||
-                    user?.role === "comercial"
-                    ? renderDocumentButtons(item.bielle, item.nom, "bielle")
-                    : "-"}{" "}
-                  </TableCell>
-
-                  <TableCell>
-                    {user?.role === "comercial" ? (
-                    item?.statut === "accept" ? (
-                      <Chip
-                      label={"Validé"}
-                      color="success"
-                      size="small"
-                      sx={{ fontSize: "0.75rem" }}
-                      />
-                    ) : item?.statut === "reject" ? (
-                      <Box
+              {allDataComs
+                .map((item) => {
+                  const timeRemaining = calculateTimeRemaining(
+                    item.arrivedTime
+                  );
+                  return (
+                    <TableRow
+                      key={item._id}
                       sx={{
-                        display: "flex",
-                        alignItems: "center",
-                        gap: 1,
+                        "&:nth-of-type(odd)": { backgroundColor: "#fafafa" },
+                        "&:hover": { backgroundColor: "#f0f7ff" },
                       }}
-                      >
-                      <Typography
-                        variant="body2"
-                        color="error"
-                        sx={{ fontWeight: "bold" }}
-                      >
-                        Rejeté
-                      </Typography>
-                      <IconButton
-                        size="small"
-                        onClick={() => {
-                        setCurrentComment(
-                          item?.coments || "Pas de commentaire"
-                        );
-                        setIsViewCommentModalOpen(true);
-                        }}
-                        sx={{ color: "text.secondary" }}
-                        >
-                        <ChatBubbleOutlineIcon fontSize="small" />
-                        </IconButton>
-                        </Box>
-                      ) : (
-                        <Box
-                        sx={{
-                        display: "flex",
-                        justifyContent: "center",
-                        gap: 1,
-                        }}
-                        >
-                        {item?.user_id !== user?._id ? (
-                        <>
-                        <IconButton
-                          color="success"
-                          size="small"
-                          onClick={() => {
-                          dispatch(
-                          update({
-                          id: item._id,
-                          fields: { statut: "accept" },
-                          })
-                          )
-                          .then(() => {
-                            setRefresh(!refresh);
-                            window.location.reload(); // Reload the page
-                          })
-                          .catch((error) =>
-                          console.error(
-                            "Failed to accept:",
-                            error
-                          )
-                          );
-                          }}
-                        >
-                          <CheckCircleIcon fontSize="small" />
-                        </IconButton>
-                        <IconButton
-                          color="error"
-                          size="small"
-                          onClick={() => {
-                          handleOpenRejectModal(item._id);
-                          setRefresh(!refresh);
-                          }}
-                        >
-                          <CancelIcon fontSize="small" />
-                        </IconButton>
-                        </>
-                      ) : (
-                        "bielle en attente de confirmation"
-                      )}
-                      </Box>
-                    )
-                    ) : (
-                    "-"
-                    )}
-                  </TableCell>
-
-                  <TableCell>
-                    {renderDocumentButtons(item.facture, item.nom, "facture")}
-                  </TableCell>
-                  <TableCell>
-                    {renderDocumentButtons(
-                    item.packingListe,
-                    item.nom,
-                    "packing-list"
-                    )}
-                  </TableCell>
-                  <TableCell>
-                    {renderDocumentButtons(
-                    item.preavisDarriver,
-                    item.nom,
-                    "preavisDarriver"
-                    )}
-                  </TableCell>
-                  <TableCell>
-                    {renderDocumentButtons(
-                    item.avisDarriver,
-                    item.nom,
-                    "avisDarriver"
-                    )}
-                  </TableCell>
-
-                  {user?.role === "magasin" && (
-                    <TableCell>
-                    <Button
-                      variant="contained"
-                      size="small"
-                      color="primary"
-                      onClick={() => handleEdit(item._id)}
-                      sx={{ textTransform: "none", py: 0.5 }}
                     >
-                      Modifier
-                    </Button>
-                    </TableCell>
-                  )}
-                  </TableRow>
-                );
-              })}
+                      <TableCell>{item.nom}</TableCell>
+                      <TableCell>{item.volume}</TableCell>
+                      <TableCell>{item.provenence}</TableCell>
+                      <TableCell>{item.poid}</TableCell>
+                      <TableCell>
+                        {(item?.statut === "accept" &&
+                          user?.role === "magasin") ||
+                        user?.role === "comercial"
+                          ? renderDocumentButtons(
+                              item.bielle,
+                              item.nom,
+                              "bielle"
+                            )
+                          : "-"}{" "}
+                      </TableCell>
+                      <TableCell>
+                        {user?.role === "comercial" ? (
+                          item?.statut === "accept" ? (
+                            <Chip
+                              label={"Validé"}
+                              color="success"
+                              size="small"
+                              sx={{ fontSize: "0.75rem" }}
+                            />
+                          ) : item?.statut === "reject" ? (
+                            <Box
+                              sx={{
+                                display: "flex",
+                                alignItems: "center",
+                                gap: 1,
+                              }}
+                            >
+                              <Typography
+                                variant="body2"
+                                color="error"
+                                sx={{ fontWeight: "bold" }}
+                              >
+                                Rejeté
+                              </Typography>
+                              <IconButton
+                                size="small"
+                                onClick={() => {
+                                  setCurrentComment(
+                                    item?.coments || "Pas de commentaire"
+                                  );
+                                  setIsViewCommentModalOpen(true);
+                                }}
+                                sx={{ color: "text.secondary" }}
+                              >
+                                <ChatBubbleOutlineIcon fontSize="small" />
+                              </IconButton>
+                            </Box>
+                          ) : (
+                            <Box
+                              sx={{
+                                display: "flex",
+                                justifyContent: "center",
+                                gap: 1,
+                              }}
+                            >
+                              {item?.user_id !== user?._id ? (
+                                <>
+                                  <IconButton
+                                    color="success"
+                                    size="small"
+                                    onClick={() => {
+                                      dispatch(
+                                        update({
+                                          id: item._id,
+                                          fields: { statut: "accept" },
+                                        })
+                                      )
+                                        .then((res) => {
+                                          if (
+                                            res.meta.requestStatus ===
+                                            "fulfilled"
+                                          ) {
+                                            setRefresh(!refresh); // utile si tu veux aussi garder le re-render local
+                                            window.location.reload();
+                                          }
+                                        })
+                                        .catch((error) =>
+                                          console.error(
+                                            "Failed to accept:",
+                                            error
+                                          )
+                                        );
+                                    }}
+                                  >
+                                    <CheckCircleIcon fontSize="small" />
+                                  </IconButton>
+                                  <IconButton
+                                    color="error"
+                                    size="small"
+                                    onClick={() => {
+                                      handleOpenRejectModal(item._id);
+                                      setRefresh(!refresh);
+                                    }}
+                                  >
+                                    <CancelIcon fontSize="small" />
+                                  </IconButton>
+                                </>
+                              ) : (
+                                "bielle en attente de confirmation"
+                              )}
+                            </Box>
+                          )
+                        ) : (
+                          "-"
+                        )}
+                      </TableCell>
+                      <TableCell>
+                        {renderDocumentButtons(
+                          item.facture,
+                          item.nom,
+                          "facture"
+                        )}
+                      </TableCell>
+                      <TableCell>
+                        {renderDocumentButtons(
+                          item.packingListe,
+                          item.nom,
+                          "packing-list"
+                        )}
+                      </TableCell>
+                      <TableCell>
+                        {new Date(item.estimateTime).toLocaleDateString()}
+                      </TableCell>
+                      <TableCell>
+                        <Box>
+                          {new Date(item.arrivedTime).toLocaleDateString()}
+                          {timeRemaining.message && (
+                            <Typography
+                              variant="caption"
+                              display="block"
+                              color={timeRemaining.color}
+                              sx={{ mt: 0.5, fontWeight: "bold" }}
+                            >
+                              {timeRemaining.message}
+                            </Typography>
+                          )}
+                        </Box>
+                      </TableCell>
+
+                      <TableCell>
+                        {renderDocumentButtons(
+                          item.preavisDarriver,
+                          item.nom,
+                          "preavisDarriver"
+                        )}
+                      </TableCell>
+                      <TableCell>
+                        {renderDocumentButtons(
+                          item.avisDarriver,
+                          item.nom,
+                          "avisDarriver"
+                        )}
+                      </TableCell>
+
+                      {user?.role === "magasin" && (
+                        <TableCell>
+                          <Button
+                            variant="contained"
+                            size="small"
+                            color="primary"
+                            onClick={() => handleEdit(item._id)}
+                            sx={{ textTransform: "none", py: 0.5 }}
+                          >
+                            Modifier
+                          </Button>
+                        </TableCell>
+                      )}
+                    </TableRow>
+                  );
+                })
+                .reverse()}
             </TableBody>
           </Table>
         </TableContainer>
@@ -539,30 +572,30 @@ const DataComList = ({ refresh, setRefresh }) => {
           <Button
             onClick={() => {
               setIsRejectModalOpen(false);
-                setRejectComment("");
-                setRefresh(!refresh);
-              }}
-              color="inherit"
-              variant="outlined"
-              >
-              Annuler
-              </Button>
-              <Button
-              onClick={() => {
-                handleReject();
-                setRefresh(!refresh);
-                setIsRejectModalOpen(false);
-                }}
-                color="primary"
-                variant="contained"
-                disabled={!rejectComment.trim()}
-              >
-                Mettre à jour
-              </Button>
-              </DialogActions>
-            </Dialog>
+              setRejectComment("");
+              setRefresh(!refresh);
+            }}
+            color="inherit"
+            variant="outlined"
+          >
+            Annuler
+          </Button>
+          <Button
+            onClick={() => {
+              handleReject();
+              setRefresh(!refresh);
+              setIsRejectModalOpen(false);
+            }}
+            color="primary"
+            variant="contained"
+            disabled={!rejectComment.trim()}
+          >
+            Mettre à jour
+          </Button>
+        </DialogActions>
+      </Dialog>
 
-            {/* Modal for viewing rejection comment */}
+      {/* Modal for viewing rejection comment */}
       <Dialog
         open={isViewCommentModalOpen}
         onClose={() => setIsViewCommentModalOpen(false)}

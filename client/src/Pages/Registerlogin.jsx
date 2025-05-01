@@ -9,7 +9,7 @@ const Registerlogin = () => {
       <div className="registerLgin-Content">
         <div className={show ? "imageanime1" : "imageanime"}>
           <img
-            src="https://img.freepik.com/photos-gratuite/coup-moyen-homme-travaillant-tard-dans-nuit_23-2150171016.jpg?t=st=1709634217~exp=1709637817~hmac=3ba3412fb1ec2af1ac589fc99b81e1cd907a4e0146417534bbb81f29c0696a00&w=360"
+            src="assets/logo.jpg"
             alt=""
           />
         </div>

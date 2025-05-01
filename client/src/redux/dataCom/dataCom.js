@@ -40,9 +40,13 @@ export const updateDataComFiles = createAsyncThunk(
   "dataCom/updateFiles",
   async ({ id, formData }, thunkAPI) => {
     try {
-      const response = await axios.put(`${API_BASE}/update-files/${id}`, formData, {
-        headers: { "Content-Type": "multipart/form-data" },
-      });
+      const response = await axios.put(
+        `${API_BASE}/update-files/${id}`,
+        formData,
+        {
+          headers: { "Content-Type": "multipart/form-data" },
+        }
+      );
       return response.data;
     } catch (error) {
       return thunkAPI.rejectWithValue(error.response?.data || "Erreur serveur");
@@ -55,11 +59,11 @@ export const update = createAsyncThunk(
   "cours/update",
   async ({ id, fields }) => {
     try {
-   ;
       let result = axios.put(
         `http://localhost:5000/dataCom/update/${id}`,
         fields
       );
+      window.location.reload();
       return result.data;
     } catch (error) {
       console.log(error);
@@ -118,6 +122,7 @@ const dataComSlice = createSlice({
         if (index !== -1) {
           state.allDataComs[index] = action.payload.dataCom;
         }
+        window.location.reload();
       })
       .addCase(updateDataComFiles.rejected, (state, action) => {
         state.status = "failed";
@@ -133,6 +138,7 @@ const dataComSlice = createSlice({
         const index = state.allDataComs.findIndex(
           (item) => item._id === action.payload.dataCom._id
         );
+        window.location.reload();
         if (index !== -1) {
           state.allDataComs[index] = action.payload.dataCom;
         }

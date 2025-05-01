@@ -47,7 +47,7 @@ const Dashboard = () => {
   const dispatch = useDispatch();
 
   const user = useSelector((state) => state.user?.user);
-console.log(user,"user")
+  console.log(user, "user");
   const [form, setForm] = useState({
     nom: "",
     poid: "",
@@ -57,11 +57,12 @@ console.log(user,"user")
     estimateTime: "",
     arrivedTime: "",
   });
-useEffect(() => {
-  setForm((prevForm) => ({
-    ...prevForm,user_id: user?._id || "", // Ensure user_id is defined
-  }));
-}, [user, user?._id]);
+  useEffect(() => {
+    setForm((prevForm) => ({
+      ...prevForm,
+      user_id: user?._id || "", // Ensure user_id is defined
+    }));
+  }, [user, user?._id]);
   const [files, setFiles] = useState({
     bielle: null,
     facture: null,
@@ -102,34 +103,12 @@ useEffect(() => {
 
     // Dispatch Redux action
     dispatch(addDataCom(formData));
-  };
-
-  const handleLogout = () => {
-    dispatch(logout());
-    navigate("/");
+    navigate("/dataComList");
+    window.location.reload();
   };
 
   return (
     <Box sx={{ flexGrow: 1 }}>
-      <AppBar position="static" color="primary">
-        <Toolbar>
-          <Typography
-            variant="h6"
-            component="div"
-            sx={{ flexGrow: 1 }}
-          >
-          </Typography>
-          <Box sx={{ display: "flex", alignItems: "center" }}>
-            <Typography variant="subtitle1" sx={{ mr: 2 }}>
-              Hello, {user?.nom || "User"}
-            </Typography>
-            <IconButton color="inherit" onClick={handleLogout}>
-              <LogoutIcon />
-            </IconButton>
-          </Box>
-        </Toolbar>
-      </AppBar>
-
       <Container maxWidth="md" sx={{ mt: 4, mb: 4 }}>
         <Paper elevation={3} sx={{ p: 4, borderRadius: 2 }}>
           <Typography variant="h5" component="h2" sx={{ mb: 4 }}>
@@ -297,16 +276,18 @@ useEffect(() => {
               </Grid>
 
               <Grid item xs={12} sx={{ mt: 3, textAlign: "center" }}>
-                <Button
-                  type="submit"
-                  variant="contained"
-                  size="large"
-                  color="primary"
-                  startIcon={<AddCircleIcon />}
-                  sx={{ border: "1px solid blue" }}
-                >
-                  Ajouter
-                </Button>
+                {user?.role === "comercial" && (
+                  <Button
+                    type="submit"
+                    variant="contained"
+                    size="large"
+                    color="primary"
+                    startIcon={<AddCircleIcon />}
+                    sx={{ border: "1px solid blue" }}
+                  >
+                    Ajouter
+                  </Button>
+                )}
               </Grid>
               <Grid item xs={12} sx={{ mt: 3, textAlign: "center" }}>
                 <Button
